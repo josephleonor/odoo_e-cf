@@ -58,7 +58,7 @@ class EcfDocument(models.Model):
                 "buyer_rnc": move.partner_id.vat or "",
                 "date": str(move.invoice_date or move.date),
                 "total": str(move.amount_total),
-                "lines": [{"description": line.name, "quantity": str(line.quantity), "price": str(line.price_unit)} for line in move.invoice_line_ids if not line.display_type],
+                "lines": [{"description": line.name, "quantity": str(line.quantity), "price": str(line.price_unit)} for line in move.invoice_line_ids if line.display_type == "product"],
             }
             # This is a transport fixture, not the DGII ECF XML or an authorized sequence.
             doc.write({"xml_file": base64.b64encode(json.dumps(payload, ensure_ascii=False).encode()), "xml_filename": doc.encf + ".json", "state": "ready", "track_id": False, "response": False})
