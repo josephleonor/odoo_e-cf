@@ -1,0 +1,13 @@
+<odoo>
+  <record id="raco_ecf_company_rule" model="ir.rule"><field name="name">e-CF compañías permitidas</field><field name="model_id" ref="model_raco_ecf_document"/><field name="domain_force">[('company_id', 'in', company_ids)]</field><field name="groups" eval="[(4, ref('account.group_account_manager'))]"/></record>
+  <record id="raco_ecf_list" model="ir.ui.view">
+    <field name="name">raco.ecf.document.list</field><field name="model">raco.ecf.document</field>
+    <field name="arch" type="xml"><list><field name="encf"/><field name="document_type"/><field name="move_id"/><field name="company_id"/><field name="state"/><field name="track_id"/></list></field>
+  </record>
+  <record id="raco_ecf_form" model="ir.ui.view">
+    <field name="name">raco.ecf.document.form</field><field name="model">raco.ecf.document</field>
+    <field name="arch" type="xml"><form string="e-CF laboratorio"><header><button name="action_prepare" type="object" string="Preparar" invisible="state not in ('draft','rejected')"/><button name="action_send_lab" type="object" string="Enviar a simulador" invisible="state != 'ready'"/><button name="action_poll_lab" type="object" string="Consultar resultado" invisible="state not in ('sent','processing')"/><field name="state" widget="statusbar"/></header><sheet><group><field name="move_id"/><field name="company_id"/><field name="document_type"/><field name="encf"/><field name="track_id"/><field name="attempt_count"/><field name="last_attempt"/><field name="xml_file" filename="xml_filename"/><field name="xml_filename" invisible="1"/><field name="response"/></group></sheet></form></field>
+  </record>
+  <record id="raco_ecf_action" model="ir.actions.act_window"><field name="name">e-CF laboratorio</field><field name="res_model">raco.ecf.document</field><field name="view_mode">list,form</field></record>
+  <menuitem id="raco_ecf_menu" name="e-CF laboratorio" parent="account.menu_finance" action="raco_ecf_action" groups="account.group_account_manager" sequence="90"/>
+</odoo>
