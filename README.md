@@ -8,6 +8,9 @@ No instalar en la base de producción para facturar. El campo e-NCF se introduce
 - Complemento Odoo instalable con lista, formulario y vínculo a factura publicada.
 - Casos de laboratorio E31, E32 y E34, en DOP. Se bloquean los otros tipos hasta implementar sus XSD.
 - Preparación de fixture JSON, envío local, TrackId, consulta de estado y registro de respuestas.
+- Rangos ficticios por compañía y tipo, asignación con bloqueo de concurrencia y control de vencimiento; puede seguir usando números manuales ficticios.
+- Validación de tipo, longitud del e-NCF, datos básicos, líneas y RNC del comprador para E31. El fixture registra subtotales, impuesto y totales calculados por Odoo.
+- Botón «e-CF pruebas» en la factura para consultar sus documentos de laboratorio.
 - Simulador local determinista, con aceptación en la segunda consulta e idempotencia para el mismo contenido.
 - Acceso de escritura limitado a administradores contables; el servicio simulado escucha solo en loopback.
 
@@ -20,12 +23,14 @@ No instalar en la base de producción para facturar. El campo e-NCF se introduce
 5. Para otro puerto local, establecer `raco_ecf.lab_url` en Parámetros del sistema; solo se admiten `localhost` y `127.0.0.1`.
 6. Ejecutar `python3 -m unittest discover -s tests -v` para verificar el simulador.
 
+Para probar la asignación automática: abrir **Contabilidad → e-CF laboratorio → Rangos ficticios**, crear un rango E32 para RACO e-CF LAB (inicio 2, fin 100, siguiente 2, vencimiento futuro); después crear otro documento de laboratorio sin e-NCF y pulsar **Asignar e-NCF ficticio**. Los números asignados nunca deben usarse ante DGII.
+
 ## Pendiente para certificar con DGII
 
 | Bloque | Implementación pendiente y criterio de aceptación |
 | --- | --- |
 | Datos fiscales | Mapear impuestos, exenciones, descuentos, formas de pago, moneda, RNC y reglas por tipo conforme al formato DGII; pruebas de cálculos y redondeo. |
-| Secuencias | Asignar e-NCF autorizado por compañía y tipo, rango/vencimiento, concurrencia, cancelación y trazabilidad. |
+| Secuencias | Reemplazar los rangos ficticios por rangos **autorizados** por DGII; verificar autorización, importación segura, cancelación y trazabilidad fiscal. |
 | XML | Reemplazar el fixture JSON por ECF/RFCE/ARECF/ACECF/ANECF; validar contra XSD oficiales vigentes y pruebas de cada tipo 31, 32, 33, 34, 41, 43, 44, 45, 46, 47. |
 | Criptografía | Firmar XML y semilla con certificado tributario en bóveda segura; comprobar firma localmente, caducidad y rotación. Nunca guardar clave privada o contraseña en parámetros de Odoo. |
 | Transporte | Cliente DGII separado por pre-certificación, certificación y producción; autenticación por semilla/token, recepción, RFCE inferior a RD$250,000, consulta de resultado, reintentos seguros y auditoría. |
