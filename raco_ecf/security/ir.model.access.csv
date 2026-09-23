@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_raco_ecf_accountant,raco.ecf.document accountant,model_raco_ecf_document,account.group_account_manager,1,1,1,0
+access_raco_ecf_lab_sequence,raco.ecf.lab.sequence accountant,model_raco_ecf_lab_sequence,account.group_account_manager,1,1,1,0
